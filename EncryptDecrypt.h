@@ -17,21 +17,18 @@ class EncryptDecrypt
 public:
     EncryptDecrypt();
 
-    //Get user input (return true for encrpytion or false for decryption
-    bool getUsrInput();
-    //Encrypt or decrypt based on user
-    void encryption_decryption(bool bEncrypt);
-    //encrpyt a string
-    string encrypt(string &text, int key);
-    //decrypt a string
-    string decrypt(std::string &encryptedText, int key);
-    //encrypt a file
-    void encryptFile(const string& filename, int key);
-    //decrypt a file
-    void decryptFile(const string &filename, int key);
+    // Encrypt a file using a password
+    void encryptFile(const string& filename, const string& password);
+    // Decrypt a file using a password
+    void decryptFile(const string& filename, const string& password);
 
 private:
-
+    // Derives a numeric key from a password string
+    int deriveKey(const string& password);
+    // The core encryption algorithm for a string
+    string encrypt(string text, int key);
+    // The core decryption algorithm for a string
+    string decrypt(string encryptedText, int key);
 };
 
 
