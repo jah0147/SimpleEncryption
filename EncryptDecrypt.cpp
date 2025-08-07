@@ -64,7 +64,10 @@ string EncryptDecrypt::decrypt(string encryptedText, int key) {
 
 // Encrypt a file by reading, encrypting content, and overwriting
 void EncryptDecrypt::encryptFile(const string& filename, const string& password) {
-    ifstream input_file(filename);
+    // Open the input file in binary mode. This is crucial for handling all file types,
+    // not just text files. In binary mode, the data is read as-is, without any
+    // character translation (e.g., for line endings), which prevents corruption.
+    ifstream input_file(filename, std::ios::binary);
     if (!input_file.is_open()) {
         cerr << "Error: Could not open file for reading: " << filename << endl;
         return;
@@ -77,7 +80,9 @@ void EncryptDecrypt::encryptFile(const string& filename, const string& password)
     int key = deriveKey(password);
     string encrypted_text = encrypt(text, key);
 
-    ofstream output_file(filename, ios::trunc);
+    // Open the output file in binary mode to write the data without translation.
+    // ios::trunc clears the file before writing.
+    ofstream output_file(filename, std::ios::binary | std::ios::trunc);
     if (!output_file.is_open()) {
         cerr << "Error: Could not open file for writing: " << filename << endl;
         return;
@@ -88,7 +93,9 @@ void EncryptDecrypt::encryptFile(const string& filename, const string& password)
 
 // Decrypt a file by reading, decrypting content, and overwriting
 void EncryptDecrypt::decryptFile(const string &filename, const string& password) {
-    ifstream input_file(filename);
+    // Open the input file in binary mode to ensure the encrypted data is read
+    // correctly without any character translation, which would corrupt the file.
+    ifstream input_file(filename, std::ios::binary);
     if (!input_file.is_open()) {
         cerr << "Error: Could not open file for reading: " << filename << endl;
         return;
@@ -101,7 +108,9 @@ void EncryptDecrypt::decryptFile(const string &filename, const string& password)
     int key = deriveKey(password);
     string decryptedText = decrypt(encryptedText, key);
 
-    ofstream output_file(filename, ios::trunc);
+    // Open the output file in binary mode to write the decrypted data faithfully.
+    // ios::trunc clears the file before writing.
+    ofstream output_file(filename, std::ios::binary | std::ios::trunc);
     if (!output_file.is_open()) {
         cerr << "Error: Could not open file for writing: " << filename << endl;
         return;

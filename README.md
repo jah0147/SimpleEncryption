@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a simple command-line application written in C++ that allows you to encrypt and decrypt files using a password. The application uses a basic transposition cipher for its encryption algorithm.
+This is a simple command-line application written in C++ that allows you to encrypt and decrypt **any file type** (text, images, executables, etc.) using a password. It operates directly on the file's bytes, making it safe for binary data. The application uses a basic transposition cipher for its encryption algorithm.
 
 ## How it Works
 
@@ -116,10 +116,10 @@ Here we implement the logic defined in the header.
 - **`encrypt` and `decrypt`**: These are the core of the cipher. The `encrypt` function rearranges the string by separating odd and even-indexed characters. The `decrypt` function must perform the exact reverse of this process to restore the original text. It's crucial that the splitting logic in `decrypt` correctly mirrors how `encrypt` combines the strings.
 
 - **`encryptFile` and `decryptFile`**: These methods handle file I/O.
-    1. They open and read the entire contents of the file at the given `filepath` into a string. A `stringstream` is a good way to do this.
+    1. They open and read the entire contents of the file in **binary mode** (`std::ios::binary`). This is critical, as it ensures data from any file type is read byte-for-byte without any translation, preventing corruption. A `stringstream` is used to buffer the file into a `std::string`.
     2. They call `deriveKey` to get the encryption key from the password.
     3. They call the private `encrypt` or `decrypt` method on the file's content.
-    4. They open the *same file* again for writing (using `std::ios::trunc` to clear it) and write the modified content back, overwriting the original.
+    4. They open the *same file* again in binary mode for writing (using `std::ios::binary | std::ios::trunc`) and write the modified content back, overwriting the original.
 
 ### 4. The Main Entry Point (`main.cpp`)
 
